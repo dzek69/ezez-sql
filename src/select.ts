@@ -394,9 +394,10 @@ class Select {
 
         if (this._where.length) {
             const { sql, values } = this._buildWhere(this._where);
-
-            this._query += "\nWHERE " + sql;
-            this._queryValues.push(...values);
+            if (sql) {
+                this._query += "\nWHERE " + sql;
+                this._queryValues.push(...values);
+            }
         }
 
         if (this._orderBy.length) {

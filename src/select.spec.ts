@@ -697,4 +697,20 @@ ORDER BY id ASC
 LIMIT 10, 20`);
         q.queryValues().must.eql([1]);
     });
+
+    it("skips where when only empty object is given", function() {
+        const q = select("*").from("table").where([{}]);
+        (() => q.pair()).must.not.throw();
+        q.query().must.equal(`SELECT *
+FROM table`);
+        q.queryValues().must.eql([]);
+    });
+
+    it.skip("skips where when only empty objects are given", function() {
+        const q = select("*").from("table").where([{}, "and", {}]);
+        (() => q.pair()).must.not.throw();
+        q.query().must.equal(`SELECT *
+FROM table`);
+        q.queryValues().must.eql([]);
+    });
 });
