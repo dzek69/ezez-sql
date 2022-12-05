@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
-## [1.0.0] - 0000-00-00
+## [0.0.1] - 2022-12-05
 ### Added
-- first version
+- first version, basic SELECT and INSERT queries supported

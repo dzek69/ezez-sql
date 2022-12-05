@@ -1,4 +1,8 @@
-WIP.
+Not your usual SQL builder!
+
+Designed for Manticore Search first, should work with MySQL.
+
+Very much WIP. Undocumented.
 
 --
 

@@ -1,6 +1,6 @@
 {
   "name": "@ezez/sql",
-  "version": "0.0.0+",
+  "version": "0.0.1",
   "repository": "git@github.com:dzek69/ezez-sql.git",
   "author": "Jacek Nowacki",
   "license": "MIT",
