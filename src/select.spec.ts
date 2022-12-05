@@ -62,7 +62,9 @@ WHERE (a = ? AND b = ?) OR title IN (?, ?)`);
     });
 
     it("works with nested conditions", function() {
-        const q = select("*").from("table").where([{ a: 1, b: 2 }, "or", [[{ title: "John A" }, "OR", { title: "John B" }]]]);
+        const q = select("*").from("table").where([
+            { a: 1, b: 2 }, "or", [[{ title: "John A" }, "OR", { title: "John B" }]],
+        ]);
         q.query().must.equal(`SELECT *
 FROM table
 WHERE (a = ? AND b = ?) OR (
@@ -72,7 +74,9 @@ WHERE (a = ? AND b = ?) OR (
     });
 
     it("works with multiple nested conditions", function() {
-        const q = select("*").from("table").where([[[{ a: 1 }, "AND", [[{ b: 2 }, "or", { b: 3 }]]]], "or", [[{ title: "John A" }, "OR", { title: "John B" }]]]);
+        const q = select("*").from("table").where([
+            [[{ a: 1 }, "AND", [[{ b: 2 }, "or", { b: 3 }]]]], "or", [[{ title: "John A" }, "OR", { title: "John B" }]],
+        ]);
         q.query().must.equal(`SELECT *
 FROM table
 WHERE (
@@ -640,7 +644,9 @@ WHERE (title1 = ? AND author != ?) OR (
         )
     )
 )`);
-        q.queryValues().must.eql(["elo", "you", "cake", "big", "small", 320, 10, 20, 50, 100, "a", "b", 500, 500, 500, 500]);
+        q.queryValues().must.eql([
+            "elo", "you", "cake", "big", "small", 320, 10, 20, 50, 100, "a", "b", 500, 500, 500, 500,
+        ]);
     });
 
     it("crashes when even items are not `and` / `or`", function() {
