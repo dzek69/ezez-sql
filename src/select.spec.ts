@@ -706,11 +706,21 @@ FROM table`);
         q.queryValues().must.eql([]);
     });
 
-    it.skip("skips where when only empty objects are given", function() {
+    it("skips where when only empty objects are given", function() {
         const q = select("*").from("table").where([{}, "and", {}]);
         (() => q.pair()).must.not.throw();
         q.query().must.equal(`SELECT *
 FROM table`);
         q.queryValues().must.eql([]);
     });
+
+    it("skips condition if undefined given as a where value", function() {
+        const q = select("*").from("table").where([{ a: 5, b: undefined }, "and", {}]);
+        q.query().must.equal(`SELECT *
+FROM table
+WHERE a = ?`);
+        q.queryValues().must.eql([5]);
+    });
+
+    // @TODO sanitized from test
 });
