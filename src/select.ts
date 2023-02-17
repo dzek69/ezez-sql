@@ -13,6 +13,36 @@ type SQL_VALUES = string | number | null | undefined | (string | number | null |
 type SQL_VALUES_NO_UNDEFINED = string | number | null | (string | number | null)[];
 type AND_OR = "OR" | "or" | "AND" | "and";
 type WHERE = (Record<string, SQL_VALUES> | [WHERE] | AND_OR)[];
+type OPTIONS = {
+    accurate_aggregation?: 0 | 1;
+    agent_query_timeout?: number;
+    boolean_simplify?: 0 | 1;
+    comment?: string;
+    cutoff?: number;
+    expand_keywords?: 0 | 1;
+    // field_weights?: Record<string, number>;
+    global_idf?: 0 | 1;
+    idf?: string; // Quoted, comma-separated list of IDF computation flags: normalized, plain, tfidf_normalized,
+    // ^... tfidf_unnormalized
+    // index_weights?: Record<string, number>;
+    local_df?: 0 | 1;
+    low_priority?: 0 | 1;
+    max_matches?: number;
+    max_matches_increase_threshold?: number;
+    max_query_time?: number;
+    max_predicted_time?: number;
+    morphology?: "none";
+    not_terms_only_allowed?: 0 | 1;
+    ranker?: "proximity_bm25" | "bm25" | "none" | "wordcount" | "proximity" | "matchany" | "fieldmask" | "sph04"
+    | "expr" | "export";
+    rand_seed?: number;
+    retry_count?: number;
+    retry_delay?: number;
+    sort_method?: "pq" | "kbuffer";
+    threads?: number;
+    // token_filter?: Quoted, colon-separated of library name:plugin name:optional string of settings
+    // ^...| token_filter='mylib.so:blend:@'
+};
 
 const removeLastAndOr = (s: string) => {
     return s.replace(/ (AND|OR) $/i, "");
@@ -34,10 +64,13 @@ class Select {
 
     private _limit: string = "";
 
+    private _options: OPTIONS = {};
+
     /**
      * @param columns columns list - NOT SANITIZED! Do not put user generated content here!
      */
     public constructor(...columns: COLUMNS[]) {
+        // @TODO check if columns are safe
         this._columns = columns;
     }
 
@@ -423,6 +456,13 @@ class Select {
         if (this._limit.length) {
             this._query += "\nLIMIT " + this._limit;
         }
+
+        if (Object.keys(this._options).length) {
+            this._query += "\nOPTION " + Object.entries(this._options).map(([key, val]) => {
+                this._queryValues.push(val); // i know, side effects in map are bad
+                return key + "=?";
+            }).join(", ");
+        }
     }
 
     /**
@@ -451,6 +491,24 @@ class Select {
         else {
             this._limit = `${offsetOrLimit}`;
         }
+        return this;
+    }
+
+    public options(options: OPTIONS) {
+        const keys = Object.keys(options);
+        if (keys.some(k => !isSafeName(k))) {
+            throw new TypeError("OPTION names can only contain a-z 0-9 _ characters");
+        }
+        if (keys.some(k => !isSafeName(k))) {
+            throw new TypeError("OPTION names can only contain a-z 0-9 _ characters");
+        }
+
+        const values = Object.values(options);
+        if (values.some(v => typeof v !== "string" && typeof v !== "number")) {
+            throw new TypeError("OPTION values can only be strings or numbers");
+        }
+
+        this._options = options;
         return this;
     }
 

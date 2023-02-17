@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
+## [0.0.3+]
+### Added
+- OPTION support for SELECT
+
 ## [0.0.3] - 2022-12-06
 ### Changed
 - SELECT WHERE skips condition if undefined is given as a value

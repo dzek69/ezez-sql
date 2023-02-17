@@ -1,5 +1,7 @@
 import { select } from "./select.js";
 
+/* eslint-disable camelcase */
+
 describe("select", function() {
     it("works with the most basic query", function() {
         const q = select("*").from("whatever");
@@ -720,6 +722,35 @@ FROM table`);
 FROM table
 WHERE a = ?`);
         q.queryValues().must.eql([5]);
+    });
+
+    it("allows to pass options", function() {
+        const q = select("*").from("table").options({ max_matches: 1000, unknown_option: "a" });
+        q.query().must.equal(`SELECT *
+FROM table
+OPTION max_matches=?, unknown_option=?`);
+        q.queryValues().must.eql([1000, "a"]);
+    });
+
+    it("allows to pass empty options", function() {
+        const q = select("*").from("table").options({});
+        q.query().must.equal(`SELECT *
+FROM table`);
+        q.queryValues().must.eql([]);
+    });
+
+    it("crashes with options that has non-simple keys", function() {
+        (() => { select("*").from("table").options({ "' where something": 1000 }); }).must.throw();
+    });
+
+    it("crashes on non-string and non-number values", function() {
+        (() => { select("*").from("table").options({ max_matches: false }); }).must.throw();
+        (() => { select("*").from("table").options({ max_matches: null }); }).must.throw();
+        (() => { select("*").from("table").options({ max_matches: undefined }); }).must.throw();
+        (() => { select("*").from("table").options({ max_matches: () => null }); }).must.throw();
+
+        (() => { select("*").from("table").options({ max_matches: 1000 }); }).must.not.throw();
+        (() => { select("*").from("table").options({ max_matches: "string" }); }).must.not.throw();
     });
 
     // @TODO sanitized from test
