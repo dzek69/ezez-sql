@@ -3,11 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [EZEZ Changelog](https://ezez.dev/changelog/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [UNRELEASED]
+## [0.0.5] - 2026-02-03
+### Added
+- UPDATE query support
+- DELETE query support
 ### Dev
 - dev deps update
 
-## [0.0.4]
+## [0.0.4] - 2023-02-17
 ### Added
 - OPTION support for SELECT
 

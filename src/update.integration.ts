@@ -1,7 +1,6 @@
 // import { createPool as mysqlCreatePool } from "mysql2/promise";
 //
-// import { insert } from "./insert.js";
-// import { select } from "./select.js";
+// import { update } from "./update.js";
 //
 // type OptionalParams = "connectionLimit" | "queueLimit" | "ssl";
 //
@@ -34,20 +33,12 @@
 //     const mysql = await connectMySql(cfg);
 //     console.info("connected");
 //     const [rsh] = await mysql.query(
-//         ...insert("films")
-//             .data({ category_id: 111 }, { category_id: 111 })
+//         ...update("films")
+//             .set({ category_id: 666 })
+//             .where([{ ">=id": 3 }])
 //             .pair(),
 //     );
-//
-//     if ("insertId" in rsh) {
-//         console.log(rsh.insertId, typeof rsh.insertId);
-//
-//         const [rows] = await mysql.query(
-//             ...select("*, TO_STRING(id) as sid").from("films").where([{ sid: rsh.insertId }]).pair(),
-//         );
-//
-//         console.log(rows);
-//     }
+//     console.log(rsh);
 // })().catch(console.error);
-
-export {};
+//
+// export {};

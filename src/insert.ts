@@ -1,5 +1,3 @@
-//                 "INSERT INTO prod_events (event, device, time, value) VALUES (:event, :device, :time, :value)"
-
 type ValidValue = string | number | null;
 type Data = Record<string, ValidValue>;
 
@@ -12,7 +10,7 @@ class Insert {
 
     private _query: string = "";
 
-    private _queryValues: (string | number | null)[] = [];
+    private _queryValues: Array<string | number | null> = [];
 
     /**
      * Starts Insert query.
@@ -37,7 +35,7 @@ class Insert {
         return this;
     }
 
-    public values(...values: (string | number | null)[][]) {
+    public values(...values: Array<Array<string | number | null>>) {
         this._values = values;
         return this;
     }
@@ -51,7 +49,7 @@ class Insert {
             throw new TypeError("No columns found");
         }
 
-        const keys = this._columns[0];
+        const keys = this._columns[0]!;
         const keysString = keys.join("```");
         if (!this._columns.every(d => d.join("```") === keysString)) {
             throw new TypeError("Data array should have all objects in the same shape");
@@ -97,7 +95,7 @@ class Insert {
     /**
      * Returns query & values tuple, useful when using with `mysql2` `query` call.
      */
-    public pair(): [string, (string | number | null)[]] {
+    public pair(): [string, Array<string | number | null>] {
         return [this.query(), this.queryValues()];
     }
 }
